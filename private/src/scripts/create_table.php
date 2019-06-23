@@ -31,7 +31,7 @@ $dbh->query('CREATE INDEX idx_site_location ON site USING GIST(location)');
 $query = <<<SQL
 CREATE TABLE current_conditions(
 id serial primary key,
-site_id integer REFERENCES site(id),
+site_id integer REFERENCES site(id) unique,
 humidity varchar(12),
 condition varchar(191),
 temperature varchar(12),
