@@ -3,36 +3,7 @@
 require realpath(dirname(__FILE__)) . '/Coords.php';
 require realpath(dirname(__FILE__)) . '/CurrentConditions.php';
 
-class Site {
-	private $id;
-	private $code;
-	private $coords;
-	private $name;
-	private $province;
-
-	public function __construct($code, $name, $province, $coords = null) {
-		$this->code = (string)$code;
-		$this->coords = $coords;
-		$this->name = (string)$name;
-		$this->province = (string)$province;
-	}
-
-	public function getName() {
-		return $this->name;
-	}
-
-	public function getCode() {
-		return $this->code;
-	}
-
-	public function getProvince() {
-		return $this->province;
-	}
-
-	public function getCoords() {
-		return $this->coords;
-	}
-
+class Site extends Model {
 	public function fillCoords() {
 		$code = $this->code;
 		$province = $this->province;
@@ -48,9 +19,9 @@ class Site {
 
 		$location = $this->getLocationInfo($xml);
 
-		$coords = new Coords((string)$location['lat'], (string)$location['lon']);
+		$location = new Coords((string)$location['lat'], (string)$location['lon']);
 
-		$this->coords = $coords;
+		$this->location = $location;
 
 		return $this;
 	}

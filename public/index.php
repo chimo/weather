@@ -17,17 +17,14 @@ if (!isset($_GET['lat']) || !isset($_GET['lon'])) {
 }
 
 // DB Connection
-$dbh = db($config['dbUser'], $config['dbPassword'], $config['dbName']);
+ORM::configure('pgsql:dbname=' . $config['dbName']);
+ORM::configure('username', $config['dbUser']);
+ORM::configure('password', $config['dbPassword']);
 
 // Get the closest weather station to us
-$statement = $dbh->prepare('SELECT code, name, province FROM site order by location <-> ST_MakePoint(:lon, :lat) limit 1');
-$statement->bindValue(':lon', $_GET['lon'], PDO::PARAM_INT);
-$statement->bindValue(':lat', $_GET['lat'], PDO::PARAM_INT);
-$statement->execute();
-
-$row = $statement->fetch(PDO::FETCH_ASSOC);
-
-$site = new Site($row['code'], $row['name'], $row['province']);
+$site = Site::raw_query(
+	'SELECT * FROM site order by location <-> ST_MakePoint(:lon, :lat)',
+	array('lon' => $_GET['lon'], 'lat' => $_GET['lat']))->find_one();
 
 $currentConditions = $site->getCurrentConditions();
 
