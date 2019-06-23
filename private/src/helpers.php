@@ -27,13 +27,27 @@ SQL;
 	return $query;
 }
 
+function upsert_current_conditions_query($currentConditions, $site_id) {
+	$humidity = $currentConditions->humidity;
+	$condition = $currentConditions->condition;
+	$temperature = $currentConditions->temperature;
+
+	$query = <<<SQL
+INSERT INTO current_conditions (site_id, humidity,
+condition, temperature, updated_at) VALUES($site_id,
+'$humidity', '$condition', '$temperature', NOW())
+ON CONFLICT (site_id) DO UPDATE SET updated_at = NOW();
+SQL;
+
+	return $query;
+}
+
 function insert_sites_query($nbSites) {
 	$subs = [];
 
 	for($i = 0; $i < $nbSites; $i += 1) {
 		$strIdx = (string)$i;
 
-		// $subs[] = "(:code$strIdx, :name$strIdx, :province$strIdx, ST_MakePoint(:location$strIdx))";
 		$subs[] = "(:code$strIdx, :name$strIdx, :province$strIdx, ST_MakePoint(:lon$strIdx,:lat$strIdx))";
 	}
 

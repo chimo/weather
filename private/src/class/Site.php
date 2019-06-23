@@ -39,6 +39,20 @@ class Site extends Model {
 		return $xml->location->name;
 	}
 
+	public function getRemoteLastModified($endpoint) {
+		$client = new \GuzzleHttp\Client();
+
+		$response = $client->request('HEAD', $endpoint);
+
+		if ($response->hasHeader('Last-Modified')) {
+			$lastModified = $response->getHeader('Last-Modified')[0];
+		} else {
+			$lastModified = 0;
+		}
+
+		return $lastModified;
+	}
+
 	public function getCurrentConditions() {
 		$province = $this->province;
 		$code = $this->code;
@@ -46,12 +60,38 @@ class Site extends Model {
 		$baseUrl = "http://dd.weatheroffice.ec.gc.ca/citypage_weather/xml";
 		$endpoint = $baseUrl . "/{$province}/{$code}_e.xml";
 
-		$client = new \GuzzleHttp\Client();
-		$response = $client->get($endpoint);
+		// Get remote 'last modified' date
+		$remoteLastModified = strtotime($this->getRemoteLastModified($endpoint));
 
-		$xml = $response->getBody();
+		// Get local 'last updated' date
+		$lastCurrentConditions = CurrentConditions::where('site_id', $this->id)
+								  ->find_one();
 
-		return $this->parseCurrentConditions($xml);
+		// If our data is more recent than the remote's "last modified"
+		// return our data instead of making a request to the endpoint.
+		if (
+			$lastCurrentConditions !== false &&
+			strtotime($lastCurrentConditions->updated_at) >= $remoteLastModified
+		) {
+			$currentConditions = $lastCurrentConditions;
+		} else {
+			$client = new \GuzzleHttp\Client();
+			$response = $client->get($endpoint);
+
+			$xml = $response->getBody();
+
+			$currentConditions = $this->parseCurrentConditions($xml);
+
+			// upsert
+			$query = upsert_current_conditions_query($currentConditions,
+				$this->id);
+
+			// "find_one()" is needed to trigger the query, but we don't
+			// really care about the result since it's an INSERT
+			CurrentConditions::raw_query($query)->find_one();
+		}
+
+		return $currentConditions;
 	}
 
 	public function parseCurrentConditions($xmlstr) {
