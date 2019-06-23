@@ -22,9 +22,23 @@ $dbh = new PDO('pgsql:dbname=' . $config['dbName'], $config['dbUser'], $config['
 // Throw exception on error
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-// Create table
+// Create site table
 $dbh->query($query);
 
 // Create index
 $dbh->query('CREATE INDEX idx_site_location ON site USING GIST(location)');
+
+$query = <<<SQL
+CREATE TABLE current_conditions(
+id serial primary key,
+site_id integer REFERENCES site(id),
+humidity varchar(12),
+condition varchar(191),
+temperature varchar(12),
+updated_at TIMESTAMP WITH TIME ZONE NOT NULL
+);
+SQL;
+
+// Create 'current_conditions' table
+$dbh->query($query);
 

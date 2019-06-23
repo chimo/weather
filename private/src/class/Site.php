@@ -57,13 +57,18 @@ class Site extends Model {
 	public function parseCurrentConditions($xmlstr) {
 		$data = new SimpleXMLElement($xmlstr);
 
-		$currentConditions = $data->currentConditions;
+		$_currentConditions = $data->currentConditions;
 
-		$condition = (string)$currentConditions->condition;
-		$temperature = (string)$currentConditions->temperature;
-		$humidity = (string)$currentConditions->relativeHumidity;
+		$condition = (string)$_currentConditions->condition;
+		$temperature = (string)$_currentConditions->temperature;
+		$humidity = (string)$_currentConditions->relativeHumidity;
 
-		return new CurrentConditions($condition, $temperature, $humidity);
+		$currentConditions = CurrentConditions::create();
+		$currentConditions->condition = $condition;
+		$currentConditions->temperature = $temperature;
+		$currentConditions->humidity = $humidity;
+
+		return $currentConditions;
 	}
 }
 
