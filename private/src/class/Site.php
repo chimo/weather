@@ -9,7 +9,7 @@ class Site extends Model {
 		$province = $this->province;
 
 		$urlSegments = [$code, $province];
-		$baseUrl = "http://dd.weatheroffice.ec.gc.ca/citypage_weather/xml";
+		$baseUrl = "https://dd.weather.gc.ca/citypage_weather/xml";
 		$endpoint = $baseUrl . "/{$province}/{$code}_e.xml";
 
 		$client = new \GuzzleHttp\Client();
@@ -57,7 +57,7 @@ class Site extends Model {
 		$province = $this->province;
 		$code = $this->code;
 
-		$baseUrl = "http://dd.weatheroffice.ec.gc.ca/citypage_weather/xml";
+		$baseUrl = "https://dd.weather.gc.ca/citypage_weather/xml";
 		$endpoint = $baseUrl . "/{$province}/{$code}_e.xml";
 
 		// Get remote 'last modified' date

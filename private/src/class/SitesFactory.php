@@ -24,7 +24,7 @@ class SitesFactory {
 	}
 
 	public function fillSites() {
-		$endpoint = 'http://dd.weatheroffice.ec.gc.ca/citypage_weather/xml/siteList.xml';
+		$endpoint = 'https://dd.weather.gc.ca/citypage_weather/xml/siteList.xml';
 
 		$client = new \GuzzleHttp\Client();
 		$response = $client->request('GET', $endpoint);
