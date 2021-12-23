@@ -6,7 +6,7 @@
 $config = [
 	'dbUser' => 'weather',
 	'dbPassword' => 'weather',
-	'dbSocket' => '/run/postgresql/.s.PGSQL.5432',
+	'dbHost' => 'localhost',
 	'dbName' => 'weather',
 
 	'secret' => 'xxx'
