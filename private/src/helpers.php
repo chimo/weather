@@ -36,7 +36,11 @@ function upsert_current_conditions_query($currentConditions, $site_id) {
 INSERT INTO current_conditions (site_id, humidity,
 condition, temperature, updated_at) VALUES($site_id,
 '$humidity', '$condition', '$temperature', NOW())
-ON CONFLICT (site_id) DO UPDATE SET updated_at = NOW();
+ON CONFLICT (site_id) DO UPDATE SET
+updated_at = NOW(),
+humidity = EXCLUDED.humidity,
+condition = EXCLUDED.condition,
+temperature = EXCLUDED.temperature;
 SQL;
 
 	return $query;
