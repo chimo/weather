@@ -16,7 +16,7 @@ if (!isset($_GET['lat']) || !isset($_GET['lon'])) {
 	exit(0);
 }
 
-$dbHost = $array['dbHost'] ?? 'localhost';
+$dbHost = $config['dbHost'] ?? 'localhost';
 
 // DB Connection
 ORM::configure('pgsql:host=' . $dbHost . ';dbname=' . $config['dbName']);
