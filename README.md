@@ -7,12 +7,21 @@ from Environment Canada (EC).
 
 ## Requirements
 
-* webserver (tested with nginx and php-fpm)
-* php7 (tested with PHP 7.2)
-* php7-simplexml
 * composer
-* postgresql (tested with 11.3)
+* php8 (tested with PHP 8.2)
+* php8-json
+* php8-mbstring
+* php8-openssl
+* php8-pdo
+* php8-pdo_pgsql
+* php8-simplexml
+* postgresql (tested with 14.9)
 * postgis (postgresql extension)
+* webserver (tested with nginx and php-fpm)
+
+## APKBUILD
+
+Alpine Linux package available here: [/chimo/apkbuilds/weather](https://code.chromic.org/chimo/apkbuilds/src/branch/master/weather)
 
 ## How does it work
 
