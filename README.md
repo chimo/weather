@@ -32,8 +32,8 @@ When we pass a lat/lon pair to our API, we use PostGIS to find the closest
 weather station, and then query the proper EC endpoint to get current
 weather[2] from that weather station.
 
-[1] http://dd.weatheroffice.ec.gc.ca/citypage_weather/xml/siteList.xml  
-[2] example: http://dd.weatheroffice.ec.gc.ca/citypage_weather/xml/BC/s0000671_e.xml
+[1] https://dd.weather.gc.ca/citypage_weather/xml/siteList.xml  
+[2] example: https://dd.weather.gc.ca/citypage_weather/xml/BC/s0000671_e.xml
 
 ## Configure
 
